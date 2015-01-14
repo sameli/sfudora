@@ -36,6 +36,15 @@ function sfudora_admin_form($form, &$form_state) {
     '#description' => t('The ajxplorer server url and path'),
     '#required' => TRUE,
   );
+  
+
+  $form['ssl_cert_path'] = array(
+  		'#type' => 'textfield',
+  		'#title' => t('SSL Certificate path'),
+  		'#default_value' => variable_get('ssl_cert_path', '/certs'),
+  		'#description' => t('The SSL Certificate path on the server'),
+  		'#required' => TRUE,
+  );
 
   // Set a specific callback for the submit button.
   $form['submit'] = array(
@@ -66,5 +75,6 @@ function sfudora_admin_form_submit(&$form, &$form_state) {
 
   variable_set('ajxp_path', $form_state['values']['ajxp_path']);
   variable_set('sfudora_repository_pid', $form_state['values']['root_collection']);
+  variable_set('ssl_cert_path', $form_state['values']['ssl_cert_path']);
   drupal_set_message(t('Simon Fraser University settings saved.'), 'status');
 }
