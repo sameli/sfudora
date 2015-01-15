@@ -638,16 +638,38 @@ function sfudora_ajaxplorer_download_file_data($params, $download_url, &$context
   $temp_file_name = 'ajaxplorer_temp';
   $temp_file_path = file_create_filename($temp_file_name, 'temporary://');
   $fp = fopen($temp_file_path, 'w+');
+  
+  $ssl_cert_path = variable_get('ssl_cert_path', '/certs');
+  //error_log("ssl path:" . $ssl_cert_path . "\n", 3, "/tmp/sfudora.log");
+  
 
-  $ch = curl_init($download_url);
-  curl_setopt($ch, CURLOPT_COOKIE, $cookies);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-  curl_setopt($ch, CURLOPT_FILE, $fp);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-  curl_exec($ch);
-  curl_close($ch);
-  fclose($fp);
+  try{
+	  
+	  $ch = curl_init($download_url);
+	  curl_setopt($ch, CURLOPT_COOKIE, $cookies);
+	  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	  curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+	  curl_setopt($ch, CURLOPT_FILE, $fp);
+	  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+	  curl_setopt($ch, CURLOPT_CAINFO, $ssl_cert_path);
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+	  curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+	  //curl_setopt($ch, CURLOPT_HEADER, 0);
+	  curl_exec($ch);
+	  
+	  if(curl_errno($ch)){
+	  	error_log('curl error:' . curl_error($ch) . '\n', 3, "/tmp/sfudora.log");
+	  }
+	  
+	  curl_close($ch);
+	  fclose($fp);
+  
+  } catch (Exception $e){
+  	error_log('caught exception: ' . $e->getMessage() . "\n", 3, "/tmp/sfudora.log");
+  	//error_log('caught exception: ' . $e->getMessage() . "\n");
+  }
+  
 
   if ($is_zip_file) {
     // Creates file and collection arrays, storing in the context results.
