@@ -5,6 +5,10 @@
  * Ajaxplorer callback stuff.
  */
 
+// constants:
+define('SFUDORA_INGEST_TITLE', 'SFU Ingest');
+define('SFUDORA_UPDATE_TITLE', 'SFU Update');
+
 /**
  * The callback proper.
  *
@@ -203,7 +207,7 @@ function sfudora_ajaxplorer_ingest_form_submit(&$form, &$form_state) {
       array('sfudora_ajaxplorer_ingest_object_batch',
         array($form, $form_state)),
     ),
-    'title' => t('SFU Ingest'),
+    'title' => t(SFUDORA_INGEST_TITLE),
     'init_message' => t('Ingest from DataSync'),
     'progress_message' => t('Time elapsed: @elapsed <br/>Estimated time remaning @estimate.'),
     'error_message' => t('An error has occurred.'),
@@ -220,7 +224,7 @@ function sfudora_ajaxplorer_ingest_form_submit(&$form, &$form_state) {
 function sfudora_ajaxplorer_update_form($form, &$form_state, $params) {
   form_load_include($form_state, 'inc', 'sfudora', 'includes/ajaxplorer_ingest');
 
-  drupal_set_title("SFU Update");
+  drupal_set_title(SFUDORA_UPDATE_TITLE);
 
   $download_url = url($params['download_base_url'], array(
     'query' => $params['download_query_params'],
@@ -299,7 +303,7 @@ function sfudora_ajaxplorer_update_form_submit(&$form, &$form_state) {
       array('sfudora_ajaxplorer_update_object_batch',
         array($form, $form_state, $update_list)),
     ),
-    'title' => t('SFU Update'),
+    'title' => t(SFUDORA_UPDATE_TITLE),
     'init_message' => t('Update from DataSync'),
     'progress_message' => t('Time elapsed: @elapsed <br/>Estimated time remaning @estimate.'),
     'error_message' => t('An error has occurred.'),
